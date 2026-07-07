@@ -22,6 +22,77 @@ body {
   min-height: 100vh;
 }
 
+.auth-shell {
+  min-height: 100vh;
+  display: grid;
+  place-items: center;
+  padding: 1rem;
+}
+
+.auth-card {
+  width: min(420px, 100%);
+  border: 1px solid rgba(152, 177, 255, 0.24);
+  border-radius: 1rem;
+  background: rgba(12, 18, 36, 0.88);
+  padding: 1.2rem;
+}
+
+.auth-card h1 {
+  margin: 0;
+}
+
+.auth-card p {
+  margin-top: 0.4rem;
+  color: #a7bbdf;
+}
+
+.auth-form {
+  display: grid;
+  gap: 0.8rem;
+}
+
+.auth-form label {
+  display: grid;
+  gap: 0.35rem;
+  font-size: 0.88rem;
+}
+
+.auth-form input {
+  border: 1px solid rgba(112, 143, 230, 0.42);
+  border-radius: 0.7rem;
+  background: rgba(18, 27, 51, 0.9);
+  color: #edf3ff;
+  padding: 0.6rem 0.7rem;
+}
+
+.auth-form button,
+.secondary-button {
+  border: 1px solid rgba(112, 143, 230, 0.42);
+  border-radius: 0.7rem;
+  background: linear-gradient(135deg, #6b7dff, #35b8ff);
+  color: #f4f8ff;
+  padding: 0.6rem 0.8rem;
+  cursor: pointer;
+}
+
+.secondary-button {
+  background: rgba(16, 25, 48, 0.75);
+}
+
+.auth-link {
+  margin-top: 0.8rem;
+  background: transparent;
+  border: none;
+  color: #9ec1ff;
+  cursor: pointer;
+}
+
+.auth-error {
+  color: #ff95a4;
+  margin: 0;
+  font-size: 0.82rem;
+}
+
 .app-shell {
   min-height: 100vh;
   display: grid;
@@ -115,6 +186,12 @@ body {
   justify-content: space-between;
   align-items: center;
   gap: 1rem;
+}
+
+.workspace-actions {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
 }
 
 .workspace-header h2 {

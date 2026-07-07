@@ -1,4 +1,6 @@
 import { useMemo, useState } from 'react';
+import { AuthPage } from '@/features/auth/AuthPage';
+import { AuthProvider, useAuth } from '@/features/auth/AuthProvider';
 
 type WorkspaceView = 'dashboard' | 'notes' | 'tasks' | 'calendar' | 'assistant';
 
@@ -15,7 +17,6 @@ const navItems: NavItem[] = [
   { id: 'calendar', title: 'Calendar', subtitle: 'Protect your time' },
   { id: 'assistant', title: 'AI Assistant', subtitle: 'Plan and brainstorm' },
 ];
-const fallbackNavItem: NavItem = navItems[0]!;
 
 function DashboardView() {
   const cards = useMemo(
@@ -39,10 +40,7 @@ function DashboardView() {
       ))}
       <article className="surface-card surface-card-wide">
         <h3>Daily briefing</h3>
-        <p>
-          Welcome to AI Personal OS. This workspace unifies notes, tasks, calendar planning and AI workflows in a single
-          streamlined command center.
-        </p>
+        <p>Secure workspace enabled with Firebase authentication.</p>
       </article>
     </section>
   );
@@ -58,9 +56,18 @@ function PlaceholderView(props: { title: string; description: string }) {
   );
 }
 
-export default function App() {
+function WorkspaceApp() {
+  const { user, loading, signOutUser } = useAuth();
   const [activeView, setActiveView] = useState<WorkspaceView>('dashboard');
-  const activeItem = navItems.find((item) => item.id === activeView) ?? fallbackNavItem;
+  const activeItem = navItems.find((item) => item.id === activeView) ?? navItems[0]!;
+
+  if (loading) {
+    return <main className="auth-shell">Loading workspace...</main>;
+  }
+
+  if (!user) {
+    return <AuthPage />;
+  }
 
   return (
     <div className="app-shell">
@@ -69,7 +76,7 @@ export default function App() {
           <span className="brand-dot" />
           <div>
             <h1>AI Personal OS</h1>
-            <p>Production workspace</p>
+            <p>{user.email ?? 'Signed in user'}</p>
           </div>
         </div>
         <nav className="nav">
@@ -93,35 +100,42 @@ export default function App() {
             <h2>{activeItem.title}</h2>
             <p>{activeItem.subtitle}</p>
           </div>
-          <div className="status-pill">Live</div>
+          <div className="workspace-actions">
+            <div className="status-pill">Authenticated</div>
+            <button type="button" className="secondary-button" onClick={() => void signOutUser()}>
+              Sign out
+            </button>
+          </div>
         </header>
 
         {activeView === 'dashboard' && <DashboardView />}
         {activeView === 'notes' && (
-          <PlaceholderView
-            title="Notes"
-            description="Your notes workspace is ready for rich capture, search and organization."
-          />
+          <PlaceholderView title="Notes" description="Notes module will be connected to Firebase in the next milestone." />
         )}
         {activeView === 'tasks' && (
-          <PlaceholderView
-            title="Tasks"
-            description="Track priorities and execution with fast updates and clear accountability."
-          />
+          <PlaceholderView title="Tasks" description="Tasks module will be connected to Firebase in the next milestone." />
         )}
         {activeView === 'calendar' && (
           <PlaceholderView
             title="Calendar"
-            description="Plan deep work blocks and commitments with a clean and responsive schedule view."
+            description="Calendar module will be connected to Firebase in the next milestone."
           />
         )}
         {activeView === 'assistant' && (
           <PlaceholderView
             title="AI Assistant"
-            description="Ask for summaries, execution plans and writing support from your embedded assistant."
+            description="Assistant memory and prompts will be connected to Firebase in the next milestone."
           />
         )}
       </main>
     </div>
+  );
+}
+
+export default function App() {
+  return (
+    <AuthProvider>
+      <WorkspaceApp />
+    </AuthProvider>
   );
 }
