@@ -1,6 +1,15 @@
 import { useState } from 'react';
 import { useAuth } from './AuthProvider';
 
+const firebaseEnvFields = [
+  'VITE_FIREBASE_API_KEY',
+  'VITE_FIREBASE_AUTH_DOMAIN',
+  'VITE_FIREBASE_PROJECT_ID',
+  'VITE_FIREBASE_STORAGE_BUCKET',
+  'VITE_FIREBASE_MESSAGING_SENDER_ID',
+  'VITE_FIREBASE_APP_ID',
+] as const;
+
 export function AuthPage() {
   const { signIn, signUp } = useAuth();
   const [mode, setMode] = useState<'signin' | 'signup'>('signin');
@@ -8,9 +17,14 @@ export function AuthPage() {
   const [password, setPassword] = useState('');
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const missingConfig = firebaseEnvFields.filter((field) => !import.meta.env[field]);
 
   const onSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
+    if (missingConfig.length > 0) {
+      setError(`Firebase environment variables are missing: ${missingConfig.join(', ')}`);
+      return;
+    }
     setSubmitting(true);
     setError(null);
 
@@ -33,6 +47,9 @@ export function AuthPage() {
       <section className="auth-card">
         <h1>AI Personal OS</h1>
         <p>{mode === 'signin' ? 'Sign in to your workspace' : 'Create your workspace account'}</p>
+        {missingConfig.length > 0 && (
+          <p className="auth-error">Create a local .env from .env.example before signing in.</p>
+        )}
         <form onSubmit={onSubmit} className="auth-form">
           <label>
             Email
