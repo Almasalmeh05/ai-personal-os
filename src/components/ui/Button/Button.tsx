@@ -22,7 +22,7 @@
 
 'use client';
 
-import React, { forwardRef, type ButtonHTMLAttributes, type ReactNode } from 'react';
+import { forwardRef, type ButtonHTMLAttributes, type ReactNode } from 'react';
 import { cva, type VariantProps } from 'class-variance-authority';
 import { cn } from '@/lib/utils/cn';
 
@@ -70,7 +70,6 @@ export interface ButtonProps
   isLoading?: boolean;
   icon?: ReactNode;
   iconPosition?: 'left' | 'right';
-  asChild?: boolean;
 }
 
 /**
@@ -89,7 +88,7 @@ const Button = forwardRef<HTMLButtonElement, ButtonProps>(
       size,
       fullWidth,
       loading: loadingProp,
-      isLoading,
+      isLoading: isLoadingProp,
       disabled,
       icon,
       iconPosition = 'left',
@@ -99,7 +98,7 @@ const Button = forwardRef<HTMLButtonElement, ButtonProps>(
     },
     ref
   ) => {
-    const isLoading = loadingProp ?? isLoading ?? false;
+    const isLoading = loadingProp ?? isLoadingProp ?? false;
     const isDisabled = disabled ?? isLoading;
 
     return (

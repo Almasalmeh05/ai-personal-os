@@ -126,8 +126,10 @@ const Input = forwardRef<HTMLInputElement, InputProps>(
               // Success state
               success && !isErrored && 'border-success-500 focus:border-success-600',
               // Icon spacing
-              icon && iconPosition === 'left' && 'pl-10',
-              (icon || clearable || (type === 'password' && showPasswordStrength)) && iconPosition === 'right' && 'pr-10',
+              Boolean(icon) && iconPosition === 'left' && 'pl-10',
+              Boolean(icon || clearable || (type === 'password' && showPasswordStrength)) &&
+                iconPosition === 'right' &&
+                'pr-10',
               className
             )}
             aria-invalid={isErrored}

@@ -10,7 +10,7 @@ export function debounce<T extends (...args: any[]) => any>(
   fn: T,
   delayMs: number
 ): (...args: Parameters<T>) => void {
-  let timeoutId: NodeJS.Timeout | null = null;
+  let timeoutId: ReturnType<typeof setTimeout> | null = null;
 
   return (...args: Parameters<T>) => {
     if (timeoutId) clearTimeout(timeoutId);
@@ -27,7 +27,7 @@ export function throttle<T extends (...args: any[]) => any>(
   intervalMs: number
 ): (...args: Parameters<T>) => void {
   let lastCallTime = 0;
-  let timeoutId: NodeJS.Timeout | null = null;
+  let timeoutId: ReturnType<typeof setTimeout> | null = null;
 
   return (...args: Parameters<T>) => {
     const now = Date.now();
@@ -52,8 +52,8 @@ export function debounceAsync<T extends (...args: any[]) => Promise<any>>(
   fn: T,
   delayMs: number
 ): (...args: Parameters<T>) => Promise<Awaited<ReturnType<T>> | undefined> {
-  let timeoutId: NodeJS.Timeout | null = null;
-  let lastPromise: Promise<any> | null = null;
+  let timeoutId: ReturnType<typeof setTimeout> | null = null;
+  let lastPromise: Promise<Awaited<ReturnType<T>>> | null = null;
 
   return (...args: Parameters<T>) => {
     if (timeoutId) clearTimeout(timeoutId);

@@ -49,7 +49,7 @@ export async function handleError(error: AppError): Promise<void> {
   await Promise.all(handlers.map((handler) => handler(error)));
 
   // Log to console in development
-  if (process.env.NODE_ENV === 'development') {
+  if (import.meta.env.DEV) {
     console.error(`[${error.code}]`, error.message, error.details);
   }
 }
@@ -104,7 +104,7 @@ export function formatErrorResponse(error: AppError): AppErrorType {
     details: error.details,
     timestamp: error.timestamp,
     retry:
-      error.canRetry() && process.env.NODE_ENV !== 'development'
+      error.canRetry() && !import.meta.env.DEV
         ? async () => {
             // Retry logic to be implemented by caller
           }

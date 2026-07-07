@@ -4,7 +4,6 @@
  */
 
 import { create } from 'zustand';
-import { persist } from 'zustand/middleware';
 import type { UUID } from '@/types';
 
 export interface StreakData {
@@ -253,7 +252,6 @@ export const useRetentionStore = create<RetentionStoreState>()((
     if (!streak) return;
 
     const now = new Date();
-    const today = now.getTime();
     const yesterday = new Date(
       now.getFullYear(),
       now.getMonth(),
@@ -364,7 +362,7 @@ export const useRetentionStore = create<RetentionStoreState>()((
 
     recentMetrics.forEach((m) => {
       const hour = new Date(m.date).getHours();
-      hourlyActivity.set(hour, (hourlyActivity.get(hour) ?? 0) + m.taskCompleted);
+      hourlyActivity.set(hour, (hourlyActivity.get(hour) ?? 0) + m.tasksCompleted);
     });
 
     // Find peak hour
