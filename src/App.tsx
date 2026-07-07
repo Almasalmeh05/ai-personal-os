@@ -1,6 +1,11 @@
 import { useMemo, useState } from 'react';
 import { AuthPage } from '@/features/auth/AuthPage';
 import { AuthProvider, useAuth } from '@/features/auth/AuthProvider';
+import { DashboardView } from '@/features/dashboard/DashboardView';
+import { NotesView } from '@/features/notes/NotesView';
+import { TasksView } from '@/features/tasks/TasksView';
+import { CalendarView } from '@/features/calendar/CalendarView';
+import { AssistantView } from '@/features/assistant/AssistantView';
 
 type WorkspaceView = 'dashboard' | 'notes' | 'tasks' | 'calendar' | 'assistant';
 
@@ -18,48 +23,10 @@ const navItems: NavItem[] = [
   { id: 'assistant', title: 'AI Assistant', subtitle: 'Plan and brainstorm' },
 ];
 
-function DashboardView() {
-  const cards = useMemo(
-    () => [
-      { title: 'Focus Score', value: '88%', hint: '+4% from yesterday' },
-      { title: 'Open Tasks', value: '14', hint: '5 due today' },
-      { title: 'Notes Captured', value: '27', hint: '9 this week' },
-      { title: 'Meetings', value: '3', hint: 'next starts 2:00 PM' },
-    ],
-    []
-  );
-
-  return (
-    <section className="content-grid">
-      {cards.map((card) => (
-        <article key={card.title} className="surface-card">
-          <p className="card-label">{card.title}</p>
-          <h3 className="card-value">{card.value}</h3>
-          <p className="card-hint">{card.hint}</p>
-        </article>
-      ))}
-      <article className="surface-card surface-card-wide">
-        <h3>Daily briefing</h3>
-        <p>Secure workspace enabled with Firebase authentication.</p>
-      </article>
-    </section>
-  );
-}
-
-function PlaceholderView(props: { title: string; description: string }) {
-  const { title, description } = props;
-  return (
-    <section className="surface-card">
-      <h2>{title}</h2>
-      <p>{description}</p>
-    </section>
-  );
-}
-
 function WorkspaceApp() {
   const { user, loading, signOutUser } = useAuth();
   const [activeView, setActiveView] = useState<WorkspaceView>('dashboard');
-  const activeItem = navItems.find((item) => item.id === activeView) ?? navItems[0]!;
+  const activeItem = useMemo(() => navItems.find((item) => item.id === activeView) ?? navItems[0]!, [activeView]);
 
   if (loading) {
     return <main className="auth-shell">Loading workspace...</main>;
@@ -108,25 +75,11 @@ function WorkspaceApp() {
           </div>
         </header>
 
-        {activeView === 'dashboard' && <DashboardView />}
-        {activeView === 'notes' && (
-          <PlaceholderView title="Notes" description="Notes module will be connected to Firebase in the next milestone." />
-        )}
-        {activeView === 'tasks' && (
-          <PlaceholderView title="Tasks" description="Tasks module will be connected to Firebase in the next milestone." />
-        )}
-        {activeView === 'calendar' && (
-          <PlaceholderView
-            title="Calendar"
-            description="Calendar module will be connected to Firebase in the next milestone."
-          />
-        )}
-        {activeView === 'assistant' && (
-          <PlaceholderView
-            title="AI Assistant"
-            description="Assistant memory and prompts will be connected to Firebase in the next milestone."
-          />
-        )}
+        {activeView === 'dashboard' && <DashboardView email={user.email ?? 'No email available'} />}
+        {activeView === 'notes' && <NotesView ownerId={user.uid} />}
+        {activeView === 'tasks' && <TasksView ownerId={user.uid} />}
+        {activeView === 'calendar' && <CalendarView ownerId={user.uid} />}
+        {activeView === 'assistant' && <AssistantView ownerId={user.uid} />}
       </main>
     </div>
   );
